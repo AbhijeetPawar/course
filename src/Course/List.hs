@@ -234,8 +234,7 @@ flattenAgain = flatMap id
 -- Empty
 seqOptional :: List (Optional a) -> Optional (List a)
 seqOptional Nil = Full Nil
-seqOptional (x:.xs) = x P.>>= (\y -> seqOptional xs P.>>= (\ys -> P.return (y:.ys)))
-
+seqOptional (x:.xs) = bindOptional (\y -> bindOptional (\ys -> Full (y:.ys)) (seqOptional xs)) x
 -- do y <- x
 --    ys <- seqOptional xs
 --    return (y:.ys)
