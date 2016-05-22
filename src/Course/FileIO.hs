@@ -11,6 +11,8 @@ import Course.Monad
 import Course.Functor
 import Course.List
 
+import Debug.Trace
+
 {-
 
 Useful Functions --
@@ -61,8 +63,8 @@ the contents of c
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+main = getArgs >>= \(code :. file :. _) ->
+          run file
 
 type FilePath =
   Chars
@@ -71,31 +73,27 @@ type FilePath =
 run ::
   Chars
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run file = readFile file >>= getFiles . lines >>= printFiles
 
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles xs = sequence (getFile <$> xs)
 
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile file = readFile file >>= \cs -> pure (file, cs)
 
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+printFiles Nil = pure ()
+printFiles ((f, cs):.xs) = printFile f cs >> printFiles xs
 
 printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
-
+printFile f cs = putStrLn ("=================== " ++ f) >>= \_ ->
+                    putStrLn cs
